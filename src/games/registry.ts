@@ -1,4 +1,5 @@
 import BaseballGame from './baseball/BaseballGame'
+import Game2048 from './game2048/Game2048'
 import MemoryGame from './memory/MemoryGame'
 import MinesweeperGame from './minesweeper/MinesweeperGame'
 import SnakeGame from './snake/SnakeGame'
@@ -108,6 +109,23 @@ export const games: GameConfig[] = [
     thumbnail: '/thumbnails/memory.svg',
     scoreUnit: '번',
     component: MemoryGame,
+  },
+  {
+    id: '2048',
+    name: '2048',
+    description: '같은 숫자를 합쳐 2048 만들기',
+    rules: [
+      '방향키/WASD 또는 화면을 쓸어서 모든 타일을 한 방향으로 밀기',
+      '같은 숫자 두 타일이 만나면 하나로 합쳐지고, 합쳐진 숫자만큼 점수를 얻음',
+      '한 번 밀 때 이미 합쳐진 타일은 다시 합쳐지지 않음',
+      '움직여서 판이 바뀌면 빈 칸에 2나 4가 새로 생기고, 더 움직일 수 없으면 종료',
+      '2048을 만들어도 계속할 수 있고, 점수가 높을수록 좋은 기록',
+    ],
+    mode: 'single',
+    scoreOrder: 'desc',
+    thumbnail: '/thumbnails/game2048.svg',
+    scoreUnit: '점',
+    component: Game2048,
   },
 ]
 
