@@ -1,5 +1,6 @@
 import MinesweeperGame from './minesweeper/MinesweeperGame'
 import SnakeGame from './snake/SnakeGame'
+import SolitaireGame from './solitaire/SolitaireGame'
 import type { GameConfig } from './types'
 
 export const games: GameConfig[] = [
@@ -35,6 +36,24 @@ export const games: GameConfig[] = [
     thumbnail: '/thumbnails/minesweeper.svg',
     scoreUnit: '초',
     component: MinesweeperGame,
+  },
+  {
+    id: 'solitaire',
+    name: '클론다이크 솔리테어',
+    description: '카드를 순서대로 쌓는 클론다이크',
+    rules: [
+      '카드를 끌어서 옮기기, 카드를 더블클릭(더블탭)하면 자동으로 위 칸에 쌓기',
+      '아래 줄에는 색이 번갈아가며 숫자가 1씩 줄도록 쌓고, 빈 줄에는 K만 놓기',
+      '위 칸에 A부터 K까지 같은 무늬로 쌓으면 클리어',
+      '왼쪽 위 더미를 누르면 한 장씩 뒤집기, 더미가 비면 다시 누르면 처음부터 (-100점)',
+      '점수: 위 칸 +10, 더미에서 아래 줄 +5, 카드 뒤집기 +5, 위 칸에서 내리기 -15, 클리어 시간 보너스',
+      '되돌리기로 직전 동작을 취소할 수 있음',
+    ],
+    mode: 'single',
+    scoreOrder: 'desc',
+    thumbnail: '/thumbnails/solitaire.svg',
+    scoreUnit: '점',
+    component: SolitaireGame,
   },
 ]
 
