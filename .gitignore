@@ -1,0 +1,41 @@
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# 세션 로그 (커밋 안 함)
+logs/
+
+# 환경변수 (2단계 Supabase 키 등)
+.env
+.env.*
+!.env.example
+
+# Vercel
+.vercel
+
+# 테스트, 빌드 산출물
+coverage
+*.tsbuildinfo
+
+# Claude Code 로컬 설정
+.claude/settings.local.json
