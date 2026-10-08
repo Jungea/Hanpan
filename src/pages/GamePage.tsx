@@ -30,7 +30,13 @@ export default function GamePage() {
 
   return (
     <div>
-      <h1 className="mb-4 text-xl font-bold">{game.name}</h1>
+      <header className="mb-4 flex items-center gap-3">
+        <Link to="/">
+          <img src="/logo-wide.png" alt="한판 HANPAN, 메인으로" className="h-10 w-auto" />
+        </Link>
+        <span className="h-6 w-px bg-slate-300" aria-hidden="true" />
+        <h1 className="text-2xl font-bold">{game.name}</h1>
+      </header>
       <Game key={round} onGameOver={setResult} />
       <details className="mt-4 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
         <summary className="cursor-pointer font-medium">규칙 보기</summary>
