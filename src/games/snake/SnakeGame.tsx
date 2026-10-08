@@ -1,4 +1,4 @@
-import { Pause, Play } from 'lucide-react'
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Pause, Play } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import type { GameProps } from '../types'
 import {
@@ -10,10 +10,19 @@ import {
   type SnakeState,
 } from './logic'
 
+type Status = 'playing' | 'paused' | 'over'
+
 const SIZE = 20
 const CELL = 22
 const CANVAS_PX = SIZE * CELL
 const SWIPE_MIN_PX = 24
+
+const DPAD: { dir: Direction; label: string; Icon: typeof ArrowUp; cell: string }[] = [
+  { dir: 'up', label: '위', Icon: ArrowUp, cell: 'col-start-2 row-start-1' },
+  { dir: 'left', label: '왼쪽', Icon: ArrowLeft, cell: 'col-start-1 row-start-2' },
+  { dir: 'right', label: '오른쪽', Icon: ArrowRight, cell: 'col-start-3 row-start-2' },
+  { dir: 'down', label: '아래', Icon: ArrowDown, cell: 'col-start-2 row-start-2' },
+]
 
 const KEY_TO_DIR: Record<string, Direction> = {
   ArrowUp: 'up',
@@ -52,34 +61,47 @@ function draw(ctx: CanvasRenderingContext2D, state: SnakeState) {
 export default function SnakeGame({ onGameOver }: GameProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const stateRef = useRef<SnakeState>(createInitialState(SIZE))
-  const pausedRef = useRef(false)
+  const statusRef = useRef<Status>('playing')
   const onGameOverRef = useRef(onGameOver)
-  const touchStart = useRef<{ x: number; y: number } | null>(null)
+  const pointerStart = useRef<{ x: number; y: number } | null>(null)
   const [score, setScore] = useState(0)
-  const [paused, setPaused] = useState(false)
+  const [status, setStatusState] = useState<Status>('playing')
 
   useEffect(() => {
     onGameOverRef.current = onGameOver
   }, [onGameOver])
 
-  const setPause = (value: boolean) => {
-    pausedRef.current = value
-    setPaused(value)
+  const setStatus = (value: Status) => {
+    statusRef.current = value
+    setStatusState(value)
+  }
+
+  const togglePlay = () => {
+    const current = statusRef.current
+    if (current === 'paused') setStatus('playing')
+    else if (current === 'playing') setStatus('paused')
+  }
+
+  const turn = (dir: Direction) => {
+    if (statusRef.current === 'playing') {
+      stateRef.current = changeDirection(stateRef.current, dir)
+    }
   }
 
   useEffect(() => {
     const ctx = canvasRef.current!.getContext('2d')!
     stateRef.current = createInitialState(SIZE)
-    pausedRef.current = false
+    statusRef.current = 'playing'
     draw(ctx, stateRef.current)
 
     let timer: ReturnType<typeof setTimeout>
     const tick = () => {
-      if (!pausedRef.current) {
+      if (statusRef.current === 'playing') {
         stateRef.current = step(stateRef.current)
         setScore(stateRef.current.score)
         draw(ctx, stateRef.current)
         if (stateRef.current.gameOver) {
+          setStatus('over')
           onGameOverRef.current({ score: stateRef.current.score })
           return
         }
@@ -91,18 +113,16 @@ export default function SnakeGame({ onGameOver }: GameProps) {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.code === 'Space') {
         e.preventDefault()
-        setPause(!pausedRef.current)
+        togglePlay()
         return
       }
       const dir = KEY_TO_DIR[e.key.length === 1 ? e.key.toLowerCase() : e.key]
       if (!dir) return
       e.preventDefault()
-      if (!pausedRef.current) {
-        stateRef.current = changeDirection(stateRef.current, dir)
-      }
+      turn(dir)
     }
     const onVisibility = () => {
-      if (document.hidden) setPause(true)
+      if (document.hidden && statusRef.current === 'playing') setStatus('paused')
     }
 
     window.addEventListener('keydown', onKeyDown)
@@ -114,22 +134,22 @@ export default function SnakeGame({ onGameOver }: GameProps) {
     }
   }, [])
 
-  const onTouchStart = (e: React.TouchEvent) => {
-    const t = e.touches[0]
-    touchStart.current = { x: t.clientX, y: t.clientY }
+  // 터치/마우스를 같이 처리: 거의 안 움직이면 탭(일시정지/계속), 움직이면 스와이프(방향 전환)
+  const onPointerDown = (e: React.PointerEvent) => {
+    pointerStart.current = { x: e.clientX, y: e.clientY }
   }
 
-  const onTouchEnd = (e: React.TouchEvent) => {
-    const start = touchStart.current
-    touchStart.current = null
-    if (!start || pausedRef.current) return
-    const t = e.changedTouches[0]
-    const dx = t.clientX - start.x
-    const dy = t.clientY - start.y
-    if (Math.max(Math.abs(dx), Math.abs(dy)) < SWIPE_MIN_PX) return
-    const dir: Direction =
-      Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : dy > 0 ? 'down' : 'up'
-    stateRef.current = changeDirection(stateRef.current, dir)
+  const onPointerUp = (e: React.PointerEvent) => {
+    const start = pointerStart.current
+    pointerStart.current = null
+    if (!start) return
+    const dx = e.clientX - start.x
+    const dy = e.clientY - start.y
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < SWIPE_MIN_PX) {
+      togglePlay()
+      return
+    }
+    turn(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : dy > 0 ? 'down' : 'up')
   }
 
   return (
@@ -138,11 +158,12 @@ export default function SnakeGame({ onGameOver }: GameProps) {
         <p className="text-lg font-semibold tabular-nums">점수 {score}</p>
         <button
           type="button"
-          onClick={() => setPause(!paused)}
-          aria-label={paused ? '계속하기' : '일시정지'}
-          className="rounded-lg border border-slate-300 p-2 text-slate-700 hover:bg-slate-100"
+          onClick={togglePlay}
+          disabled={status === 'over'}
+          aria-label={status === 'playing' ? '일시정지' : '계속하기'}
+          className="rounded-lg border border-slate-300 p-2 text-slate-700 hover:bg-slate-100 disabled:opacity-40"
         >
-          {paused ? <Play size={20} /> : <Pause size={20} />}
+          {status === 'playing' ? <Pause size={20} /> : <Play size={20} />}
         </button>
       </div>
       <div className="relative w-full">
@@ -150,15 +171,33 @@ export default function SnakeGame({ onGameOver }: GameProps) {
           ref={canvasRef}
           width={CANVAS_PX}
           height={CANVAS_PX}
-          onTouchStart={onTouchStart}
-          onTouchEnd={onTouchEnd}
+          onPointerDown={onPointerDown}
+          onPointerUp={onPointerUp}
           className="aspect-square w-full touch-none rounded-lg"
         />
-        {paused && (
-          <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/50 text-xl font-bold text-white">
-            일시정지
+        {status === 'paused' && (
+          <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-1 rounded-lg bg-black/50 text-white">
+            <p className="text-xl font-bold">일시정지</p>
+            <p className="text-sm">탭해서 계속</p>
           </div>
         )}
+      </div>
+      {/* 터치 기기에서만 보이는 방향 버튼 */}
+      <div className="hidden select-none grid-cols-3 grid-rows-2 gap-1 pointer-coarse:grid">
+        {DPAD.map(({ dir, label, Icon, cell }) => (
+          <button
+            key={dir}
+            type="button"
+            aria-label={label}
+            onPointerDown={(e) => {
+              e.preventDefault()
+              turn(dir)
+            }}
+            className={`${cell} flex h-14 w-14 touch-manipulation items-center justify-center rounded-xl border border-slate-300 bg-white text-slate-700 active:bg-slate-200`}
+          >
+            <Icon size={26} />
+          </button>
+        ))}
       </div>
     </div>
   )
