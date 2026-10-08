@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import GameOverDialog from '../components/GameOverDialog'
 import { getGame } from '../games/registry'
 import type { GameResult } from '../games/types'
 
@@ -7,6 +8,7 @@ export default function GamePage() {
   const { id = '' } = useParams()
   const game = getGame(id)
   const [result, setResult] = useState<GameResult | null>(null)
+  const [round, setRound] = useState(0)
 
   if (!game) {
     return (
@@ -21,16 +23,16 @@ export default function GamePage() {
 
   const Game = game.component
 
+  const restart = () => {
+    setResult(null)
+    setRound((r) => r + 1)
+  }
+
   return (
     <div>
       <h1 className="mb-4 text-xl font-bold">{game.name}</h1>
-      <Game onGameOver={setResult} />
-      {result && (
-        <p className="mt-4 text-center text-slate-600">
-          결과: {result.score}
-          {game.scoreUnit} (결과 화면은 M2에서 구현)
-        </p>
-      )}
+      <Game key={round} onGameOver={setResult} />
+      {result && <GameOverDialog game={game} result={result} onRestart={restart} />}
     </div>
   )
 }

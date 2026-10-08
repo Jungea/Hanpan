@@ -7,7 +7,7 @@ export default function DummyGame({ onGameOver }: GameProps) {
       <button
         type="button"
         className="rounded-lg bg-slate-900 px-4 py-2 text-white"
-        onClick={() => onGameOver({ score: 100 })}
+        onClick={() => onGameOver({ score: 100, variant: '초급' })}
       >
         게임 종료 (100점)
       </button>
