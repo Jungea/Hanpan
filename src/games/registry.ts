@@ -1,6 +1,7 @@
 import MinesweeperGame from './minesweeper/MinesweeperGame'
 import SnakeGame from './snake/SnakeGame'
 import SolitaireGame from './solitaire/SolitaireGame'
+import SpiderGame from './spider/SpiderGame'
 import type { GameConfig } from './types'
 
 export const games: GameConfig[] = [
@@ -54,6 +55,25 @@ export const games: GameConfig[] = [
     thumbnail: '/thumbnails/solitaire.svg',
     scoreUnit: '점',
     component: SolitaireGame,
+  },
+  {
+    id: 'spider',
+    name: '스파이더 솔리테어',
+    description: '같은 무늬 K에서 A까지 이어 붙이기',
+    rules: [
+      '카드를 끌어서 옮기기, 숫자가 1 큰 카드 위에는 무늬와 상관없이 놓을 수 있고 빈 줄에는 아무 카드나 놓기',
+      '같은 무늬로 숫자가 이어진 카드들만 한 번에 옮길 수 있음',
+      '한 줄에 같은 무늬 K에서 A까지 13장이 이어지면 자동으로 치워지고, 8벌을 모두 치우면 클리어',
+      '오른쪽 위 더미를 누르면 모든 줄에 한 장씩 나눠 줌 (빈 줄이 있으면 불가)',
+      '카드를 더블클릭(더블탭)하면 알맞은 줄로 자동 이동',
+      '점수: 500점에서 시작, 이동과 나눠 주기마다 -1, 한 벌 완성마다 +100',
+      '무늬 수가 적을수록 쉬운 난이도 (1무늬, 2무늬, 4무늬)',
+    ],
+    mode: 'single',
+    scoreOrder: 'desc',
+    thumbnail: '/thumbnails/spider.svg',
+    scoreUnit: '점',
+    component: SpiderGame,
   },
 ]
 
