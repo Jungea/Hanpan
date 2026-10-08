@@ -10,6 +10,7 @@ export type GameConfig = {
   id: string
   name: string
   description: string
+  rules: string[]
   mode: 'single' | 'multi'
   maxPlayers?: number
   scoreOrder: 'asc' | 'desc'

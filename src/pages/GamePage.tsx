@@ -32,6 +32,14 @@ export default function GamePage() {
     <div>
       <h1 className="mb-4 text-xl font-bold">{game.name}</h1>
       <Game key={round} onGameOver={setResult} />
+      <details className="mt-4 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
+        <summary className="cursor-pointer font-medium">규칙 보기</summary>
+        <ul className="mt-2 list-disc space-y-1 pl-5 text-slate-600">
+          {game.rules.map((rule) => (
+            <li key={rule}>{rule}</li>
+          ))}
+        </ul>
+      </details>
       {result && <GameOverDialog game={game} result={result} onRestart={restart} />}
     </div>
   )
