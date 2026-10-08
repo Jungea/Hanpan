@@ -1,4 +1,5 @@
 import BaseballGame from './baseball/BaseballGame'
+import MemoryGame from './memory/MemoryGame'
 import MinesweeperGame from './minesweeper/MinesweeperGame'
 import SnakeGame from './snake/SnakeGame'
 import SolitaireGame from './solitaire/SolitaireGame'
@@ -91,6 +92,22 @@ export const games: GameConfig[] = [
     thumbnail: '/thumbnails/baseball.svg',
     scoreUnit: '번',
     component: BaseballGame,
+  },
+  {
+    id: 'memory',
+    name: '메모리 카드',
+    description: '같은 그림의 짝 찾기',
+    rules: [
+      '카드를 눌러 두 장씩 뒤집어 같은 그림(모양과 색이 모두 같은 카드)의 짝을 찾기',
+      '짝이 맞으면 그대로 남고, 다르면 잠시 뒤 다시 덮이니 위치를 기억하기',
+      '모든 짝을 찾으면 클리어, 두 장을 뒤집은 횟수가 적을수록 좋은 기록',
+      '난이도: 쉬움 6쌍, 보통 8쌍, 어려움 12쌍',
+    ],
+    mode: 'single',
+    scoreOrder: 'asc',
+    thumbnail: '/thumbnails/memory.svg',
+    scoreUnit: '번',
+    component: MemoryGame,
   },
 ]
 
