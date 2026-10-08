@@ -1,3 +1,4 @@
+import BaseballGame from './baseball/BaseballGame'
 import MinesweeperGame from './minesweeper/MinesweeperGame'
 import SnakeGame from './snake/SnakeGame'
 import SolitaireGame from './solitaire/SolitaireGame'
@@ -74,6 +75,22 @@ export const games: GameConfig[] = [
     thumbnail: '/thumbnails/spider.svg',
     scoreUnit: '점',
     component: SpiderGame,
+  },
+  {
+    id: 'baseball',
+    name: '숫자야구',
+    description: '숨겨진 숫자를 적은 횟수로 맞히기',
+    rules: [
+      '컴퓨터가 정한 중복 없는 숫자(3자리 또는 4자리)를 맞히기, 0도 쓰이고 맨 앞에 올 수도 있음',
+      '숫자와 자리가 모두 맞으면 스트라이크, 숫자만 맞고 자리가 다르면 볼, 하나도 없으면 아웃',
+      '정해진 횟수 안에 맞혀야 하고, 적은 횟수로 맞힐수록 좋은 기록',
+      '키보드 숫자, Backspace, Enter 또는 화면 버튼으로 입력',
+    ],
+    mode: 'single',
+    scoreOrder: 'asc',
+    thumbnail: '/thumbnails/baseball.svg',
+    scoreUnit: '번',
+    component: BaseballGame,
   },
 ]
 
