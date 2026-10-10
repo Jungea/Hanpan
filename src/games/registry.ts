@@ -5,6 +5,7 @@ import MinesweeperGame from './minesweeper/MinesweeperGame'
 import SnakeGame from './snake/SnakeGame'
 import SolitaireGame from './solitaire/SolitaireGame'
 import SpiderGame from './spider/SpiderGame'
+import SudokuGame from './sudoku/SudokuGame'
 import type { GameConfig } from './types'
 
 export const games: GameConfig[] = [
@@ -126,6 +127,24 @@ export const games: GameConfig[] = [
     thumbnail: '/thumbnails/game2048.svg',
     scoreUnit: '점',
     component: Game2048,
+  },
+  {
+    id: 'sudoku',
+    name: '스도쿠',
+    description: '빈 칸을 채워 가로, 세로, 3x3 칸을 1~9로 완성하기',
+    rules: [
+      '칸을 선택한 뒤 숫자 버튼이나 키보드 숫자로 입력, Backspace로 지우기',
+      '같은 가로줄, 세로줄, 3x3 칸에 1~9가 한 번씩만 들어가도록 채우기',
+      '중복된 숫자는 빨간색으로 표시됨 (정답은 알려주지 않음)',
+      '메모 버튼을 누르면 후보 숫자를 작게 적어둘 수 있음',
+      '되돌리기로 직전 입력을 취소할 수 있음',
+      '모든 칸을 규칙에 맞게 채우면 클리어, 걸린 시간이 짧을수록 좋은 기록',
+    ],
+    mode: 'single',
+    scoreOrder: 'asc',
+    thumbnail: '/thumbnails/sudoku.svg',
+    scoreUnit: '초',
+    component: SudokuGame,
   },
 ]
 
