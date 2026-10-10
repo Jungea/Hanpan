@@ -2,6 +2,7 @@ import BaseballGame from './baseball/BaseballGame'
 import Game2048 from './game2048/Game2048'
 import MemoryGame from './memory/MemoryGame'
 import MinesweeperGame from './minesweeper/MinesweeperGame'
+import NonogramGame from './nonogram/NonogramGame'
 import SnakeGame from './snake/SnakeGame'
 import SolitaireGame from './solitaire/SolitaireGame'
 import SpiderGame from './spider/SpiderGame'
@@ -145,6 +146,24 @@ export const games: GameConfig[] = [
     thumbnail: '/thumbnails/sudoku.svg',
     scoreUnit: '초',
     component: SudokuGame,
+  },
+  {
+    id: 'nonogram',
+    name: '노노그램',
+    description: '행과 열의 숫자 힌트를 보고 칸을 칠해 그림 완성하기',
+    rules: [
+      '행과 열 옆의 숫자는 그 줄에서 이어지는 칠해진 칸의 개수를 순서대로 보여줌',
+      '칸을 눌러 칠하기, 칠하기/X표시 버튼으로 모드를 바꿔 아닌 칸에 X 표시',
+      '눌러서 드래그하면 여러 칸을 한 번에 칠하거나 X표시할 수 있음',
+      '모든 행과 열이 힌트를 만족하면 클리어 (정답 그림과 똑같지 않아도 됨)',
+      '힌트를 이미 만족한 줄은 옆에 흐리게 표시됨',
+      '걸린 시간이 짧을수록 좋은 기록',
+    ],
+    mode: 'single',
+    scoreOrder: 'asc',
+    thumbnail: '/thumbnails/nonogram.svg',
+    scoreUnit: '초',
+    component: NonogramGame,
   },
 ]
 
